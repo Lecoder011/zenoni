@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Calendar,
   Mail,
@@ -7,14 +7,12 @@ import {
   Check,
   ChevronDown,
   Sparkles,
-  Zap,
   Target,
   Rocket,
   Search,
   Palette,
   Code2,
   Send,
-  Quote,
   Menu,
   X,
   ArrowRight,
@@ -22,6 +20,10 @@ import {
   EyeOff,
   ShieldAlert,
   Clock,
+  ArrowUpRight,
+  Server,
+  Lock,
+  Globe,
 } from "lucide-react";
 import logo from "@/assets/zenoni-logo.svg";
 
@@ -29,17 +31,17 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "Zenoni Agency — Landing pages qui convertissent vos visiteurs en clients" },
+      { title: "Zenoni Agency — Landing pages qui convertissent en 2-4 semaines" },
       {
         name: "description",
         content:
-          "Zenoni Agency conçoit des landing pages premium orientées conversion pour TPE/PME, startups et SaaS. Design glassmorphique, performance, résultats. Réservez votre appel découverte.",
+          "Zenoni Agency conçoit des landing pages premium orientées conversion pour TPE/PME, startups et SaaS. Livraison en 2 à 4 semaines. Réservez votre appel découverte.",
       },
       { property: "og:title", content: "Zenoni Agency — Landing pages qui convertissent" },
       {
         property: "og:description",
         content:
-          "Des sites one-page premium qui transforment vos visiteurs en clients. Design moderne, performance, conversion.",
+          "Des sites one-page premium qui transforment vos visiteurs en clients.",
       },
     ],
   }),
@@ -49,56 +51,59 @@ const CAL_URL = "https://cal.com/ilan-b-zenoni-agency/appel?overlayCalendar=true
 const MAIL = "admin@zenoni.agency";
 const WHATSAPP = "https://wa.me/41792272134";
 
-function Orbs() {
+/* ============== Intro loader ============== */
+function Intro() {
+  const [done, setDone] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setDone(true), 3500);
+    return () => clearTimeout(t);
+  }, []);
+  if (done) return null;
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      <div
-        className="orb orb-a"
-        style={{
-          top: "-10%",
-          left: "-10%",
-          width: 520,
-          height: 520,
-          background: "radial-gradient(circle, #d54545 0%, transparent 70%)",
-        }}
-      />
-      <div
-        className="orb orb-b"
-        style={{
-          top: "20%",
-          right: "-15%",
-          width: 600,
-          height: 600,
-          background: "radial-gradient(circle, #7a1fff 0%, transparent 70%)",
-        }}
-      />
-      <div
-        className="orb orb-c"
-        style={{
-          bottom: "-15%",
-          left: "30%",
-          width: 560,
-          height: 560,
-          background: "radial-gradient(circle, #ff4d8a 0%, transparent 70%)",
-        }}
-      />
-      <div
-        className="orb orb-a"
-        style={{
-          top: "60%",
-          left: "-5%",
-          width: 420,
-          height: 420,
-          background: "radial-gradient(circle, #1a4dff 0%, transparent 70%)",
-          animationDelay: "-8s",
-        }}
-      />
-      <div className="noise" />
+    <div className="fixed inset-0 z-[100] intro-fade-out pointer-events-none">
+      <div className="absolute inset-0 bg-[#0e0e12] intro-curtain">
+        <div className="absolute inset-0 bg-grid-fine opacity-20" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <div className="intro-logo flex items-baseline gap-2">
+            <span className="text-5xl sm:text-7xl font-bold tracking-tight text-white">
+              Zenoni
+            </span>
+            <span className="h-2 w-2 rounded-full bg-[#d54545] animate-pulse" />
+          </div>
+          <div className="mt-3 text-[10px] uppercase tracking-[0.4em] text-white/50 intro-logo">
+            Agency
+          </div>
+          <div className="mt-8 h-px w-48 overflow-hidden bg-white/10">
+            <div className="h-full w-full bg-[#d54545] intro-bar" />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
-function CTAButton({
+/* ============== Reveal on scroll ============== */
+function useReveal() {
+  useEffect(() => {
+    const els = document.querySelectorAll<HTMLElement>(".reveal");
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add("in");
+            io.unobserve(e.target);
+          }
+        }
+      },
+      { threshold: 0.12 },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+}
+
+/* ============== Primitives ============== */
+function CTA({
   href,
   children,
   variant = "primary",
@@ -107,79 +112,110 @@ function CTAButton({
 }: {
   href: string;
   children: React.ReactNode;
-  variant?: "primary" | "ghost";
+  variant?: "primary" | "ghost" | "dark";
   className?: string;
   icon?: React.ComponentType<{ className?: string }>;
 }) {
   const base =
-    "inline-flex items-center gap-2 rounded-full px-6 py-3.5 text-sm font-semibold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#d54545]/60";
+    "group inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#d54545]/40";
   const styles =
     variant === "primary"
-      ? "bg-[#d54545] text-white shadow-[0_8px_30px_-4px_rgba(213,69,69,0.55)] hover:shadow-[0_12px_40px_-4px_rgba(213,69,69,0.75)] hover:-translate-y-0.5 hover:bg-[#e25555]"
-      : "glass text-white hover:bg-white/10";
+      ? "bg-[#d54545] text-white shadow-[0_10px_30px_-10px_rgba(213,69,69,0.6)] hover:shadow-[0_18px_40px_-10px_rgba(213,69,69,0.7)] hover:-translate-y-0.5"
+      : variant === "dark"
+      ? "bg-[#15151a] text-white hover:bg-[#222228] hover:-translate-y-0.5"
+      : "bg-transparent text-[#15151a] border border-[#15151a]/15 hover:border-[#15151a]/35 hover:bg-[#15151a]/[0.04]";
   return (
-    <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" className={`${base} ${styles} ${className}`}>
+    <a
+      href={href}
+      target={href.startsWith("http") ? "_blank" : undefined}
+      rel="noopener noreferrer"
+      className={`${base} ${styles} ${className}`}
+    >
       {Icon && <Icon className="h-4 w-4" />}
       {children}
+      <ArrowRight className="h-4 w-4 -mr-1 opacity-0 -translate-x-1 transition-all group-hover:opacity-100 group-hover:translate-x-0" />
     </a>
   );
 }
 
+function Eyebrow({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="inline-flex items-center gap-2 rounded-full border border-[#15151a]/12 bg-white/70 px-3 py-1 text-[11px] font-medium uppercase tracking-wider text-[#15151a]/70">
+      <span className="h-1.5 w-1.5 rounded-full bg-[#d54545]" />
+      {children}
+    </div>
+  );
+}
+
+/* ============== Header ============== */
 function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   const links = [
-    { href: "#probleme", label: "Pourquoi nous" },
+    { href: "#probleme", label: "Le constat" },
     { href: "#services", label: "Services" },
     { href: "#process", label: "Process" },
-    { href: "#portfolio", label: "Réalisations" },
     { href: "#faq", label: "FAQ" },
   ];
   return (
-    <header className="sticky top-4 z-50 mx-auto w-full max-w-6xl px-4">
-      <div className="glass flex items-center justify-between rounded-2xl px-4 py-3 sm:px-5">
-        <a href="#top" className="flex items-center">
-          <img src={logo} alt="Zenoni Agency" className="h-8 w-auto" />
+    <header
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+        scrolled ? "nav-glass" : "bg-transparent"
+      }`}
+    >
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5">
+        <a href="#top" className="flex items-center gap-2">
+          <img src={logo} alt="Zenoni Agency" className="h-7 w-auto" />
+          <span className="text-base font-bold tracking-tight text-[#15151a]">
+            Zenoni
+          </span>
         </a>
-        <nav className="hidden items-center gap-7 lg:flex">
+        <nav className="hidden items-center gap-8 lg:flex">
           {links.map((l) => (
             <a
               key={l.href}
               href={l.href}
-              className="text-sm text-white/75 transition-colors hover:text-white"
+              className="text-sm font-medium text-[#15151a]/70 transition-colors hover:text-[#15151a]"
             >
               {l.label}
             </a>
           ))}
         </nav>
         <div className="hidden lg:block">
-          <CTAButton href={CAL_URL} icon={Calendar}>
+          <CTA href={CAL_URL} variant="dark" icon={Calendar}>
             Réserver un appel
-          </CTAButton>
+          </CTA>
         </div>
         <button
           aria-label="Menu"
           onClick={() => setOpen(!open)}
-          className="lg:hidden rounded-full glass p-2 text-white"
+          className="lg:hidden rounded-full border border-[#15151a]/15 p-2 text-[#15151a]"
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
       {open && (
-        <div className="glass mt-2 rounded-2xl p-4 lg:hidden">
+        <div className="mx-4 mt-1 rounded-2xl border border-[#15151a]/10 bg-white p-4 shadow-lg lg:hidden">
           <nav className="flex flex-col gap-3">
             {links.map((l) => (
               <a
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="text-sm text-white/80"
+                className="text-sm text-[#15151a]/80"
               >
                 {l.label}
               </a>
             ))}
-            <CTAButton href={CAL_URL} icon={Calendar} className="mt-2 justify-center">
+            <CTA href={CAL_URL} variant="dark" icon={Calendar} className="mt-2 justify-center">
               Réserver un appel
-            </CTAButton>
+            </CTA>
           </nav>
         </div>
       )}
@@ -187,55 +223,72 @@ function Header() {
   );
 }
 
+/* ============== Hero ============== */
 function Hero() {
   return (
-    <section id="top" className="relative pt-28 pb-24 sm:pt-36 sm:pb-32">
-      <div className="mx-auto max-w-6xl px-4 text-center">
-        <div className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium text-white/85">
-          <Sparkles className="h-3.5 w-3.5 text-[#d54545]" />
-          Landing pages premium · Conversion-first
+    <section id="top" className="relative overflow-hidden pt-36 pb-24 sm:pt-44 sm:pb-32">
+      {/* Background pattern + accents */}
+      <div className="absolute inset-0 bg-grid mask-fade" />
+      <div
+        className="accent-blur"
+        style={{
+          top: -120,
+          right: -80,
+          width: 480,
+          height: 480,
+          background: "radial-gradient(circle, rgba(213,69,69,0.22), transparent 70%)",
+        }}
+      />
+      <div
+        className="accent-blur"
+        style={{
+          bottom: -160,
+          left: -120,
+          width: 520,
+          height: 520,
+          background: "radial-gradient(circle, rgba(120,140,200,0.18), transparent 70%)",
+        }}
+      />
+
+      <div className="relative mx-auto max-w-6xl px-5 text-center">
+        <div className="animate-fade-up [animation-delay:200ms]">
+          <Eyebrow>Studio web · Suisse</Eyebrow>
         </div>
-        <h1 className="mt-6 text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl">
-          Une landing page qui transforme
+        <h1 className="mt-6 text-5xl font-bold leading-[1.02] tracking-tight text-[#15151a] sm:text-7xl lg:text-[5.5rem] animate-fade-up [animation-delay:350ms]">
+          Des sites qui transforment
           <br />
           vos visiteurs en{" "}
           <span className="relative inline-block">
-            <span className="text-zenoni">clients</span>
-            <span
-              className="absolute -inset-2 -z-10 rounded-3xl blur-2xl"
-              style={{ background: "rgba(213,69,69,0.35)" }}
-            />
+            <span className="shimmer-text">clients.</span>
           </span>
-          .
         </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-base text-white/70 sm:text-lg">
-          Zenoni Agency conçoit des sites one-page premium pour TPE/PME, startups et SaaS.
-          Design moderne, message percutant, performance — pensés pour convertir dès la première
-          seconde.
+        <p className="mx-auto mt-7 max-w-2xl text-base text-[#15151a]/65 sm:text-lg animate-fade-up [animation-delay:500ms]">
+          Zenoni Agency conçoit des landing pages premium pour TPE/PME, startups et SaaS.
+          Design sobre, message clair, performance — pensés pour convertir.
         </p>
-        <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <CTAButton href={CAL_URL} icon={Calendar}>
+        <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row animate-fade-up [animation-delay:650ms]">
+          <CTA href={CAL_URL} icon={Calendar}>
             Réserver un appel découverte
-          </CTAButton>
-          <CTAButton href="#portfolio" variant="ghost" icon={ArrowRight}>
-            Voir les réalisations
-          </CTAButton>
+          </CTA>
+          <CTA href="#services" variant="ghost">
+            Voir les offres
+          </CTA>
         </div>
 
-        {/* Hero mock card */}
-        <div className="relative mx-auto mt-16 max-w-4xl">
-          <div className="glass-strong rounded-3xl p-3 sm:p-4">
-            <div className="rounded-2xl bg-black/40 p-1.5">
+        {/* Hero mock (glass kept here only) */}
+        <div className="relative mx-auto mt-20 max-w-4xl animate-scale-in [animation-delay:800ms]">
+          <div className="hero-glass rounded-3xl p-3 sm:p-4 animate-float">
+            <div className="rounded-2xl bg-[#0e0e12] p-1.5 shadow-inner">
               <div className="flex items-center gap-1.5 px-3 py-2">
                 <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f56]" />
                 <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]" />
                 <span className="h-2.5 w-2.5 rounded-full bg-[#27c93f]" />
                 <span className="ml-3 text-[10px] text-white/50">votre-site.com</span>
               </div>
-              <div className="grid gap-4 rounded-xl bg-gradient-to-br from-white/[0.04] to-transparent p-6 sm:grid-cols-3 sm:p-10">
+              <div className="grid gap-4 rounded-xl bg-gradient-to-br from-white/[0.06] to-transparent p-6 sm:grid-cols-3 sm:p-10">
                 <div className="sm:col-span-2 text-left">
                   <div className="h-3 w-24 rounded-full bg-white/15" />
-                  <div className="mt-4 h-8 w-full rounded-md bg-white/20" />
+                  <div className="mt-4 h-8 w-full rounded-md bg-white/25" />
                   <div className="mt-2 h-8 w-4/5 rounded-md bg-white/15" />
                   <div className="mt-5 h-3 w-3/4 rounded-full bg-white/10" />
                   <div className="mt-2 h-3 w-2/3 rounded-full bg-white/10" />
@@ -244,7 +297,7 @@ function Hero() {
                     <div className="h-9 w-28 rounded-full bg-white/10" />
                   </div>
                 </div>
-                <div className="glass-red rounded-xl p-4">
+                <div className="rounded-xl border border-white/10 bg-white/5 p-4">
                   <div className="h-2 w-12 rounded-full bg-white/30" />
                   <div className="mt-3 h-6 w-16 rounded bg-white/80" />
                   <div className="mt-2 h-2 w-20 rounded-full bg-white/20" />
@@ -257,25 +310,22 @@ function Hero() {
               </div>
             </div>
           </div>
-          <div
-            className="absolute -inset-10 -z-10 rounded-[3rem] blur-3xl"
-            style={{
-              background:
-                "radial-gradient(ellipse at center, rgba(213,69,69,0.35), transparent 70%)",
-            }}
-          />
         </div>
 
         {/* Trust stats */}
         <div className="mx-auto mt-16 grid max-w-3xl grid-cols-3 gap-3 sm:gap-6">
           {[
-            { v: "+250%", l: "Conversions moyennes" },
+            { v: "2–4 sem.", l: "Délai de livraison" },
             { v: "< 2s", l: "Temps de chargement" },
             { v: "100%", l: "Sur-mesure" },
-          ].map((s) => (
-            <div key={s.l} className="glass rounded-2xl px-4 py-5">
-              <div className="text-2xl font-bold text-white sm:text-3xl">{s.v}</div>
-              <div className="mt-1 text-xs text-white/60 sm:text-sm">{s.l}</div>
+          ].map((s, i) => (
+            <div
+              key={s.l}
+              className="reveal surface rounded-2xl px-4 py-5"
+              style={{ transitionDelay: `${i * 80}ms` }}
+            >
+              <div className="text-2xl font-bold text-[#15151a] sm:text-3xl">{s.v}</div>
+              <div className="mt-1 text-xs text-[#15151a]/55 sm:text-sm">{s.l}</div>
             </div>
           ))}
         </div>
@@ -284,6 +334,33 @@ function Hero() {
   );
 }
 
+/* ============== Marquee ============== */
+function Marquee() {
+  const words = [
+    "Landing pages",
+    "Conversion-first",
+    "Design sobre",
+    "Performance",
+    "SEO",
+    "Sur-mesure",
+    "Suisse",
+  ];
+  const row = [...words, ...words];
+  return (
+    <section className="relative border-y border-[#15151a]/8 bg-white/50 py-6 overflow-hidden">
+      <div className="flex animate-marquee whitespace-nowrap gap-12">
+        {row.map((w, i) => (
+          <div key={i} className="flex items-center gap-12 text-xl font-semibold text-[#15151a]/40">
+            <span>{w}</span>
+            <span className="text-[#d54545]">✦</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ============== Problem ============== */
 function Problem() {
   const problems = [
     {
@@ -299,43 +376,43 @@ function Problem() {
     {
       icon: TrendingDown,
       title: "Prospects qui s'évaporent",
-      desc: "Chaque visiteur perdu est un client qui va directement chez le concurrent d'à côté.",
+      desc: "Chaque visiteur perdu est un client qui part directement chez le concurrent.",
     },
     {
       icon: Clock,
-      title: "Temps & énergie gaspillés",
+      title: "Temps gaspillé",
       desc: "Sans outil qui convertit 24/7, vous courez après chaque lead manuellement.",
     },
   ];
   return (
     <section id="probleme" className="relative py-24 sm:py-32">
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="mx-auto max-w-3xl text-center">
-          <div className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium text-white/85">
-            <ShieldAlert className="h-3.5 w-3.5 text-[#d54545]" />
-            Le vrai coût de l'inaction
-          </div>
-          <h2 className="mt-5 text-3xl font-bold tracking-tight text-white sm:text-5xl">
-            Pas de site (ou un mauvais site) ?<br />
-            <span className="text-zenoni">Ça vous coûte plus cher que vous ne pensez.</span>
+      <div className="absolute inset-x-0 top-0 h-64 bg-dots opacity-60 mask-fade-b" />
+      <div className="relative mx-auto max-w-6xl px-5">
+        <div className="mx-auto max-w-3xl text-center reveal">
+          <Eyebrow>Le constat</Eyebrow>
+          <h2 className="mt-5 text-3xl font-bold tracking-tight text-[#15151a] sm:text-5xl">
+            Pas de site (ou un mauvais site)
+            <br />
+            <span className="text-zenoni">vous coûte plus cher que vous ne pensez.</span>
           </h2>
-          <p className="mt-5 text-white/70">
+          <p className="mt-5 text-[#15151a]/65">
             En 2026, votre site est votre premier commercial. S'il est absent, lent ou
             mal-foutu, c'est votre chiffre d'affaires qui en paie le prix.
           </p>
         </div>
 
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {problems.map((p) => (
+        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {problems.map((p, i) => (
             <div
               key={p.title}
-              className="glass group rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1"
+              className="reveal surface group rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#15151a]/15 hover:shadow-md"
+              style={{ transitionDelay: `${i * 80}ms` }}
             >
-              <div className="glass-red inline-flex h-12 w-12 items-center justify-center rounded-2xl">
-                <p.icon className="h-5 w-5 text-white" />
+              <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[#15151a] text-white transition-colors group-hover:bg-[#d54545]">
+                <p.icon className="h-5 w-5" />
               </div>
-              <h3 className="mt-5 text-lg font-semibold text-white">{p.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-white/65">{p.desc}</p>
+              <h3 className="mt-5 text-lg font-semibold text-[#15151a]">{p.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-[#15151a]/60">{p.desc}</p>
             </div>
           ))}
         </div>
@@ -344,265 +421,238 @@ function Problem() {
   );
 }
 
+/* ============== Services ============== */
 function Services() {
   const plans = [
     {
-      name: "Essentiel",
-      price: "899",
-      tag: "Pour démarrer fort",
-      icon: Zap,
+      name: "Landing page",
+      price: "1'500",
+      tag: "L'essentiel",
+      sub: "Le site qui transforme. Sans abonnement.",
+      icon: Target,
       features: [
         "Landing page one-page sur-mesure",
         "Design responsive premium",
+        "Copywriting orienté conversion",
         "Optimisation SEO de base",
-        "Formulaire de contact",
+        "Animations & micro-interactions",
         "Mise en ligne incluse",
-        "Livraison en 7 jours",
+        "Livraison en 2 à 4 semaines",
       ],
       featured: false,
     },
     {
-      name: "Pro",
-      price: "1'690",
-      tag: "Le plus populaire",
-      icon: Target,
+      name: "Landing + Suivi 12 mois",
+      price: "6'000",
+      tag: "Le plus complet",
+      sub: "Votre site + un partenaire à vos côtés toute l'année.",
+      icon: Rocket,
       features: [
-        "Tout de l'offre Essentiel",
-        "Copywriting orienté conversion",
-        "Animations & micro-interactions",
-        "Intégration analytics & pixel",
-        "Connexion Calendly / CRM",
-        "2 cycles de révisions",
-        "Support 30 jours",
+        "Tout de l'offre Landing page",
+        "Accompagnement sur 12 mois",
+        "Disponibilité pour les modifications",
+        "1 point mensuel : ce qui marche, ce qu'on améliore",
+        "Itérations basées sur les données",
+        "Support prioritaire",
       ],
       featured: true,
     },
-    {
-      name: "Sur-mesure",
-      price: "Sur devis",
-      tag: "Projets ambitieux",
-      icon: Rocket,
-      features: [
-        "Tout de l'offre Pro",
-        "Multi-pages / espace membre",
-        "Intégrations backend avancées",
-        "Stratégie de conversion dédiée",
-        "A/B testing & itérations",
-        "Support prioritaire",
-      ],
-      featured: false,
-    },
   ];
   return (
-    <section id="services" className="relative py-24 sm:py-32">
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="mx-auto max-w-3xl text-center">
-          <div className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium text-white/85">
-            <Sparkles className="h-3.5 w-3.5 text-[#d54545]" />
-            Nos offres
-          </div>
-          <h2 className="mt-5 text-3xl font-bold tracking-tight text-white sm:text-5xl">
-            Une formule pour chaque ambition
+    <section id="services" className="relative py-24 sm:py-32 bg-white/60">
+      <div className="absolute inset-0 bg-grid-fine opacity-50 mask-fade" />
+      <div className="relative mx-auto max-w-6xl px-5">
+        <div className="mx-auto max-w-3xl text-center reveal">
+          <Eyebrow>Nos offres</Eyebrow>
+          <h2 className="mt-5 text-3xl font-bold tracking-tight text-[#15151a] sm:text-5xl">
+            Deux formules, un seul objectif :<br />
+            <span className="text-zenoni">vous faire gagner des clients.</span>
           </h2>
-          <p className="mt-5 text-white/70">
-            Des prix clairs, un livrable premium, aucun frais caché. Vous savez exactement ce
-            que vous payez et ce que vous obtenez.
+          <p className="mt-5 text-[#15151a]/65">
+            Prix de départ clairs, livrables premium, aucun frais caché. Les deux formules
+            peuvent inclure la gestion technique : hébergement, sécurité et nom de domaine.
           </p>
         </div>
 
-        <div className="mt-14 grid gap-6 lg:grid-cols-3">
-          {plans.map((p) => (
+        <div className="mt-14 grid gap-5 lg:grid-cols-2">
+          {plans.map((p, i) => (
             <div
               key={p.name}
-              className={`relative rounded-3xl p-7 transition-all duration-300 hover:-translate-y-1 ${
-                p.featured ? "glass-strong ring-1 ring-[#d54545]/50" : "glass"
+              className={`reveal relative rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1 ${
+                p.featured
+                  ? "bg-[#15151a] text-white shadow-2xl shadow-black/20"
+                  : "surface hover:shadow-md"
               }`}
+              style={{ transitionDelay: `${i * 100}ms` }}
             >
               {p.featured && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#d54545] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg shadow-[#d54545]/40">
+                <div className="absolute -top-3 left-8 rounded-full bg-[#d54545] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg shadow-[#d54545]/30">
                   {p.tag}
                 </div>
               )}
               <div className="flex items-center gap-3">
-                <div className="glass-red inline-flex h-11 w-11 items-center justify-center rounded-xl">
-                  <p.icon className="h-5 w-5 text-white" />
+                <div
+                  className={`inline-flex h-11 w-11 items-center justify-center rounded-xl ${
+                    p.featured ? "bg-white/10 text-white" : "bg-[#15151a] text-white"
+                  }`}
+                >
+                  <p.icon className="h-5 w-5" />
                 </div>
-                <h3 className="text-xl font-bold text-white">{p.name}</h3>
+                <div>
+                  <h3 className={`text-xl font-bold ${p.featured ? "text-white" : "text-[#15151a]"}`}>
+                    {p.name}
+                  </h3>
+                  <div className={`text-xs ${p.featured ? "text-white/55" : "text-[#15151a]/55"}`}>
+                    {p.sub}
+                  </div>
+                </div>
               </div>
-              {!p.featured && (
-                <div className="mt-1 text-xs text-white/55">{p.tag}</div>
-              )}
-              <div className="mt-6 flex items-baseline gap-1">
-                {p.price !== "Sur devis" && (
-                  <span className="text-sm text-white/60">CHF</span>
-                )}
-                <span className="text-4xl font-bold text-white">{p.price}</span>
-                {p.price !== "Sur devis" && (
-                  <span className="text-sm text-white/60">.-</span>
-                )}
+              <div className="mt-6 flex items-baseline gap-2">
+                <span className={`text-xs uppercase tracking-wider ${p.featured ? "text-white/55" : "text-[#15151a]/55"}`}>
+                  À partir de
+                </span>
               </div>
-              <ul className="mt-6 space-y-3">
+              <div className="mt-1 flex items-baseline gap-1">
+                <span className={`text-5xl font-bold ${p.featured ? "text-white" : "text-[#15151a]"}`}>
+                  {p.price}
+                </span>
+                <span className={`text-sm ${p.featured ? "text-white/60" : "text-[#15151a]/60"}`}>
+                  CHF
+                </span>
+              </div>
+              <ul className="mt-7 space-y-3">
                 {p.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2.5 text-sm text-white/80">
+                  <li
+                    key={f}
+                    className={`flex items-start gap-2.5 text-sm ${
+                      p.featured ? "text-white/85" : "text-[#15151a]/80"
+                    }`}
+                  >
                     <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#d54545]" />
                     <span>{f}</span>
                   </li>
                 ))}
               </ul>
-              <CTAButton
+              <CTA
                 href={CAL_URL}
-                variant={p.featured ? "primary" : "ghost"}
+                variant={p.featured ? "primary" : "dark"}
                 icon={Calendar}
-                className="mt-7 w-full justify-center"
+                className="mt-8 w-full justify-center"
               >
                 Réserver un appel
-              </CTAButton>
+              </CTA>
             </div>
           ))}
+        </div>
+
+        {/* Add-on technique */}
+        <div className="reveal mt-8 rounded-2xl border border-dashed border-[#15151a]/20 bg-white/70 p-6 sm:p-8">
+          <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-4">
+              <div className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#d54545]/10 text-[#d54545]">
+                <Server className="h-5 w-5" />
+              </div>
+              <div>
+                <div className="text-sm font-semibold text-[#15151a]">
+                  Gestion technique disponible sur les deux formules
+                </div>
+                <p className="mt-1 text-sm text-[#15151a]/65">
+                  Hébergement, sécurité et connexion du nom de domaine pris en charge.
+                  Vous ne touchez à rien.
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2 text-xs text-[#15151a]/70">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#15151a]/[0.04] px-3 py-1">
+                    <Server className="h-3 w-3" /> Hébergement
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#15151a]/[0.04] px-3 py-1">
+                    <Lock className="h-3 w-3" /> Sécurité
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#15151a]/[0.04] px-3 py-1">
+                    <Globe className="h-3 w-3" /> Nom de domaine
+                  </span>
+                </div>
+              </div>
+            </div>
+            <a
+              href={CAL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-sm font-semibold text-[#15151a] hover:text-[#d54545]"
+            >
+              Discuter du tarif <ArrowUpRight className="h-4 w-4" />
+            </a>
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
+/* ============== Process ============== */
 function Process() {
   const steps = [
     {
       icon: Search,
       title: "Découverte",
-      desc: "Appel stratégique pour comprendre votre business, votre cible et vos objectifs de conversion.",
-      d: "Jour 1",
+      desc: "Appel stratégique pour comprendre votre business, votre cible et vos objectifs.",
+      d: "Semaine 1",
     },
     {
       icon: Palette,
       title: "Design",
-      desc: "Maquette sur-mesure avec direction artistique alignée à votre marque. Validation rapide.",
-      d: "Jour 2-3",
+      desc: "Maquette sur-mesure avec direction artistique alignée à votre marque.",
+      d: "Semaine 1-2",
     },
     {
       icon: Code2,
       title: "Développement",
       desc: "Intégration premium, responsive, performante. Animations, SEO et tracking inclus.",
-      d: "Jour 4-6",
+      d: "Semaine 2-3",
     },
     {
       icon: Send,
       title: "Mise en ligne",
       desc: "Déploiement, connexion à votre domaine, formation rapide. Vous êtes opérationnel.",
-      d: "Jour 7",
+      d: "Semaine 3-4",
     },
   ];
   return (
     <section id="process" className="relative py-24 sm:py-32">
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="mx-auto max-w-3xl text-center">
-          <div className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium text-white/85">
-            <Rocket className="h-3.5 w-3.5 text-[#d54545]" />
-            Notre process
-          </div>
-          <h2 className="mt-5 text-3xl font-bold tracking-tight text-white sm:text-5xl">
+      <div className="mx-auto max-w-6xl px-5">
+        <div className="mx-auto max-w-3xl text-center reveal">
+          <Eyebrow>Le process</Eyebrow>
+          <h2 className="mt-5 text-3xl font-bold tracking-tight text-[#15151a] sm:text-5xl">
             De l'idée au lancement en{" "}
-            <span className="text-zenoni">7 jours</span>
+            <span className="text-zenoni">2 à 4 semaines</span>
           </h2>
-          <p className="mt-5 text-white/70">
+          <p className="mt-5 text-[#15151a]/65">
             Un process carré, transparent et rapide. Vous savez où on en est à chaque étape.
           </p>
         </div>
 
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="relative mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {/* connecting line */}
+          <div className="pointer-events-none absolute left-0 right-0 top-12 hidden lg:block">
+            <div className="mx-12 h-px bg-gradient-to-r from-transparent via-[#15151a]/15 to-transparent" />
+          </div>
           {steps.map((s, i) => (
-            <div key={s.title} className="glass relative rounded-3xl p-6">
-              <div className="flex items-center justify-between">
-                <span className="text-5xl font-bold text-white/10">0{i + 1}</span>
-                <div className="glass-red inline-flex h-11 w-11 items-center justify-center rounded-xl">
-                  <s.icon className="h-5 w-5 text-white" />
-                </div>
-              </div>
-              <h3 className="mt-3 text-lg font-semibold text-white">{s.title}</h3>
-              <div className="mt-1 text-xs font-medium text-[#d54545]">{s.d}</div>
-              <p className="mt-3 text-sm leading-relaxed text-white/65">{s.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Portfolio() {
-  const projects = [
-    {
-      name: "Lumen Studio",
-      sector: "Studio créatif",
-      colors: ["#d54545", "#1a1a2e"],
-    },
-    {
-      name: "Nova SaaS",
-      sector: "Logiciel B2B",
-      colors: ["#7a1fff", "#0f0f23"],
-    },
-    {
-      name: "Maison Verde",
-      sector: "Restaurant",
-      colors: ["#34a853", "#1c1c1c"],
-    },
-    {
-      name: "Atlas Coaching",
-      sector: "Coach business",
-      colors: ["#ff8a3d", "#1e1e1e"],
-    },
-    {
-      name: "Pulse Fitness",
-      sector: "Salle de sport",
-      colors: ["#d54545", "#0a0a0a"],
-    },
-    {
-      name: "Wave Studio",
-      sector: "Agence digitale",
-      colors: ["#1a4dff", "#0f0f23"],
-    },
-  ];
-  return (
-    <section id="portfolio" className="relative py-24 sm:py-32">
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="mx-auto max-w-3xl text-center">
-          <div className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium text-white/85">
-            <Target className="h-3.5 w-3.5 text-[#d54545]" />
-            Réalisations
-          </div>
-          <h2 className="mt-5 text-3xl font-bold tracking-tight text-white sm:text-5xl">
-            Des projets qui convertissent
-          </h2>
-          <p className="mt-5 text-white/70">
-            Un aperçu des landing pages livrées récemment. Chaque projet est pensé pour les
-            objectifs business du client.
-          </p>
-        </div>
-
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((p) => (
             <div
-              key={p.name}
-              className="glass group overflow-hidden rounded-3xl transition-all duration-300 hover:-translate-y-1"
+              key={s.title}
+              className="reveal relative"
+              style={{ transitionDelay: `${i * 100}ms` }}
             >
-              <div
-                className="relative h-48 overflow-hidden"
-                style={{
-                  background: `linear-gradient(135deg, ${p.colors[0]}, ${p.colors[1]})`,
-                }}
-              >
-                <div className="absolute inset-0 opacity-30 mix-blend-overlay [background:radial-gradient(circle_at_30%_30%,white,transparent_60%)]" />
-                <div className="absolute bottom-4 left-4 right-4 glass rounded-xl p-3">
-                  <div className="h-2 w-16 rounded-full bg-white/40" />
-                  <div className="mt-2 h-3 w-3/4 rounded-full bg-white/60" />
+              <div className="surface group relative rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+                <div className="flex items-center justify-between">
+                  <span className="text-5xl font-bold text-[#15151a]/10">0{i + 1}</span>
+                  <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[#15151a] text-white transition-colors group-hover:bg-[#d54545]">
+                    <s.icon className="h-5 w-5" />
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center justify-between p-5">
-                <div>
-                  <h3 className="font-semibold text-white">{p.name}</h3>
-                  <div className="text-xs text-white/55">{p.sector}</div>
+                <h3 className="mt-3 text-lg font-semibold text-[#15151a]">{s.title}</h3>
+                <div className="mt-1 text-xs font-semibold uppercase tracking-wider text-[#d54545]">
+                  {s.d}
                 </div>
-                <ArrowRight className="h-4 w-4 text-white/40 transition-transform group-hover:translate-x-1 group-hover:text-[#d54545]" />
+                <p className="mt-3 text-sm leading-relaxed text-[#15151a]/65">{s.desc}</p>
               </div>
             </div>
           ))}
@@ -612,64 +662,12 @@ function Portfolio() {
   );
 }
 
-function Testimonials() {
-  const t = [
-    {
-      q: "Site livré en une semaine, design ultra-propre. On a doublé nos demandes de devis en 1 mois.",
-      n: "Sophie M.",
-      r: "Fondatrice, Atelier Marbre",
-    },
-    {
-      q: "Ilan a compris notre positionnement dès le premier appel. La landing convertit mieux que tout ce qu'on avait avant.",
-      n: "Julien K.",
-      r: "CEO, FlowDesk SaaS",
-    },
-    {
-      q: "Travail premium, communication carrée, prix honnête. Je recommande sans hésiter Zenoni.",
-      n: "Camille R.",
-      r: "Coach business",
-    },
-  ];
-  return (
-    <section className="relative py-24 sm:py-32">
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="mx-auto max-w-3xl text-center">
-          <div className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium text-white/85">
-            <Quote className="h-3.5 w-3.5 text-[#d54545]" />
-            Ils nous ont fait confiance
-          </div>
-          <h2 className="mt-5 text-3xl font-bold tracking-tight text-white sm:text-5xl">
-            Ce que disent nos clients
-          </h2>
-        </div>
-
-        <div className="mt-14 grid gap-5 lg:grid-cols-3">
-          {t.map((x) => (
-            <div key={x.n} className="glass rounded-3xl p-7">
-              <Quote className="h-7 w-7 text-[#d54545]" />
-              <p className="mt-4 text-base leading-relaxed text-white/85">"{x.q}"</p>
-              <div className="mt-6 flex items-center gap-3">
-                <div className="glass-red flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-white">
-                  {x.n.charAt(0)}
-                </div>
-                <div>
-                  <div className="text-sm font-semibold text-white">{x.n}</div>
-                  <div className="text-xs text-white/55">{x.r}</div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
+/* ============== FAQ ============== */
 function FAQ() {
   const items = [
     {
       q: "Combien de temps pour livrer ma landing page ?",
-      a: "En moyenne 7 jours ouvrés pour les formules Essentiel et Pro, à partir de la validation du brief. Les projets sur-mesure prennent généralement 2 à 4 semaines selon la complexité.",
+      a: "Entre 2 et 4 semaines à partir de la validation du brief, selon la complexité et la rapidité des allers-retours.",
     },
     {
       q: "Je n'ai ni logo ni contenu, c'est un problème ?",
@@ -677,31 +675,28 @@ function FAQ() {
     },
     {
       q: "Le site est-il vraiment optimisé pour convertir ?",
-      a: "Oui. Chaque section, chaque CTA, chaque mot est pensé pour guider votre visiteur vers l'action. On s'appuie sur les bonnes pratiques de copywriting et de design conversion-first.",
+      a: "Oui. Chaque section, chaque CTA, chaque mot est pensé pour guider votre visiteur vers l'action, en s'appuyant sur les bonnes pratiques de copywriting et de design conversion-first.",
     },
     {
-      q: "Puis-je modifier mon site moi-même après la livraison ?",
-      a: "Oui, on vous remet un site facile à éditer (textes, images, prix) via une interface simple. On forme aussi votre équipe en 30 minutes lors de la mise en ligne.",
+      q: "Quelle est la différence entre les deux offres ?",
+      a: "L'offre à 1'500 CHF, c'est la création du site, sans suivi. L'offre à 6'000 CHF, c'est le site + un accompagnement sur 12 mois : je reste à votre disposition pour les modifications et on fait un point chaque mois pour voir ce qui marche et améliorer ce qui peut l'être.",
     },
     {
-      q: "Quels sont les frais cachés ?",
-      a: "Aucun. Le prix inclut design, développement, mise en ligne et 30 jours de support. L'hébergement et le nom de domaine restent à votre charge (~10 CHF/mois).",
+      q: "Pouvez-vous gérer l'hébergement et le nom de domaine ?",
+      a: "Oui, sur les deux formules. On peut prendre en charge l'hébergement, la sécurité et la connexion du nom de domaine. Tarif à discuter selon vos besoins.",
     },
     {
       q: "Et si je ne suis pas satisfait ?",
-      a: "Toutes les formules incluent des cycles de révisions. On ne livre pas tant que vous n'êtes pas pleinement satisfait du résultat.",
+      a: "Les formules incluent des cycles de révisions. On ne livre pas tant que vous n'êtes pas pleinement satisfait du résultat.",
     },
   ];
   const [openIdx, setOpenIdx] = useState<number | null>(0);
   return (
     <section id="faq" className="relative py-24 sm:py-32">
-      <div className="mx-auto max-w-3xl px-4">
-        <div className="text-center">
-          <div className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium text-white/85">
-            <Sparkles className="h-3.5 w-3.5 text-[#d54545]" />
-            FAQ
-          </div>
-          <h2 className="mt-5 text-3xl font-bold tracking-tight text-white sm:text-5xl">
+      <div className="mx-auto max-w-3xl px-5">
+        <div className="text-center reveal">
+          <Eyebrow>FAQ</Eyebrow>
+          <h2 className="mt-5 text-3xl font-bold tracking-tight text-[#15151a] sm:text-5xl">
             Vos questions, nos réponses
           </h2>
         </div>
@@ -710,12 +705,16 @@ function FAQ() {
           {items.map((it, i) => {
             const open = openIdx === i;
             return (
-              <div key={it.q} className="glass overflow-hidden rounded-2xl">
+              <div
+                key={it.q}
+                className="reveal surface overflow-hidden rounded-2xl"
+                style={{ transitionDelay: `${i * 60}ms` }}
+              >
                 <button
                   onClick={() => setOpenIdx(open ? null : i)}
                   className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
                 >
-                  <span className="text-sm font-semibold text-white sm:text-base">
+                  <span className="text-sm font-semibold text-[#15151a] sm:text-base">
                     {it.q}
                   </span>
                   <ChevronDown
@@ -730,7 +729,7 @@ function FAQ() {
                   }`}
                 >
                   <div className="overflow-hidden">
-                    <p className="px-5 pb-5 text-sm leading-relaxed text-white/70">
+                    <p className="px-5 pb-5 text-sm leading-relaxed text-[#15151a]/70">
                       {it.a}
                     </p>
                   </div>
@@ -744,34 +743,43 @@ function FAQ() {
   );
 }
 
+/* ============== Final CTA ============== */
 function FinalCTA() {
   return (
     <section id="contact" className="relative py-24 sm:py-32">
-      <div className="mx-auto max-w-4xl px-4">
-        <div className="glass-strong relative overflow-hidden rounded-[2rem] p-8 text-center sm:p-14">
+      <div className="mx-auto max-w-4xl px-5">
+        <div className="reveal relative overflow-hidden rounded-[2rem] bg-[#0e0e12] p-10 text-center text-white shadow-2xl sm:p-16">
+          <div className="absolute inset-0 bg-grid-fine opacity-[0.08]" />
           <div
-            className="absolute -top-32 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full blur-3xl"
-            style={{ background: "rgba(213,69,69,0.45)" }}
+            className="accent-blur"
+            style={{
+              top: -100,
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: 360,
+              height: 360,
+              background: "radial-gradient(circle, rgba(213,69,69,0.5), transparent 70%)",
+            }}
           />
           <div className="relative">
-            <div className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium text-white/85">
-              <Calendar className="h-3.5 w-3.5 text-[#d54545]" />
-              Prêt à passer à l'action ?
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[11px] font-medium uppercase tracking-wider text-white/80">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#d54545]" />
+              Prêt à passer à l'action
             </div>
-            <h2 className="mt-5 text-3xl font-bold tracking-tight text-white sm:text-5xl">
+            <h2 className="mt-5 text-3xl font-bold tracking-tight sm:text-5xl">
               Réservez votre appel découverte
               <br />
               <span className="text-zenoni">gratuit & sans engagement.</span>
             </h2>
-            <p className="mx-auto mt-5 max-w-xl text-white/70">
+            <p className="mx-auto mt-5 max-w-xl text-white/65">
               30 minutes pour comprendre votre projet, vos objectifs et voir si on peut vous
               aider. Pas de blabla, pas de pression.
             </p>
 
             <div className="mt-9 flex justify-center">
-              <CTAButton href={CAL_URL} icon={Calendar}>
+              <CTA href={CAL_URL} icon={Calendar}>
                 Réserver mon appel
-              </CTAButton>
+              </CTA>
             </div>
 
             <div className="mx-auto mt-10 flex max-w-md items-center gap-4">
@@ -785,7 +793,7 @@ function FinalCTA() {
             <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <a
                 href={`mailto:${MAIL}`}
-                className="glass inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm text-white transition-all hover:bg-white/10"
+                className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm text-white transition-all hover:bg-white/10"
               >
                 <Mail className="h-4 w-4 text-[#d54545]" />
                 {MAIL}
@@ -794,7 +802,7 @@ function FinalCTA() {
                 href={WHATSAPP}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="glass inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm text-white transition-all hover:bg-white/10"
+                className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm text-white transition-all hover:bg-white/10"
               >
                 <MessageCircle className="h-4 w-4 text-[#d54545]" />
                 WhatsApp : 079 227 21 34
@@ -807,48 +815,53 @@ function FinalCTA() {
   );
 }
 
+/* ============== Footer ============== */
 function Footer() {
   return (
     <footer className="relative pt-10 pb-12">
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="glass rounded-3xl p-8">
+      <div className="mx-auto max-w-6xl px-5">
+        <div className="surface rounded-3xl p-8">
           <div className="flex flex-col items-start justify-between gap-8 sm:flex-row">
             <div className="max-w-sm">
-              <img src={logo} alt="Zenoni Agency" className="h-9 w-auto" />
-              <p className="mt-4 text-sm leading-relaxed text-white/60">
+              <div className="flex items-center gap-2">
+                <img src={logo} alt="Zenoni Agency" className="h-8 w-auto" />
+                <span className="text-base font-bold tracking-tight text-[#15151a]">
+                  Zenoni
+                </span>
+              </div>
+              <p className="mt-4 text-sm leading-relaxed text-[#15151a]/60">
                 Landing pages premium pour entreprises ambitieuses. Design, conversion,
                 résultats.
               </p>
             </div>
             <div className="grid grid-cols-2 gap-10 text-sm sm:gap-16">
               <div>
-                <div className="text-xs font-semibold uppercase tracking-wider text-white/45">
+                <div className="text-xs font-semibold uppercase tracking-wider text-[#15151a]/45">
                   Navigation
                 </div>
                 <ul className="mt-3 space-y-2">
-                  <li><a href="#services" className="text-white/75 hover:text-white">Services</a></li>
-                  <li><a href="#process" className="text-white/75 hover:text-white">Process</a></li>
-                  <li><a href="#portfolio" className="text-white/75 hover:text-white">Réalisations</a></li>
-                  <li><a href="#faq" className="text-white/75 hover:text-white">FAQ</a></li>
+                  <li><a href="#services" className="text-[#15151a]/75 hover:text-[#15151a]">Services</a></li>
+                  <li><a href="#process" className="text-[#15151a]/75 hover:text-[#15151a]">Process</a></li>
+                  <li><a href="#faq" className="text-[#15151a]/75 hover:text-[#15151a]">FAQ</a></li>
                 </ul>
               </div>
               <div>
-                <div className="text-xs font-semibold uppercase tracking-wider text-white/45">
+                <div className="text-xs font-semibold uppercase tracking-wider text-[#15151a]/45">
                   Contact
                 </div>
                 <ul className="mt-3 space-y-2">
-                  <li><a href={CAL_URL} target="_blank" rel="noopener noreferrer" className="text-white/75 hover:text-white">Réserver un appel</a></li>
-                  <li><a href={`mailto:${MAIL}`} className="text-white/75 hover:text-white">{MAIL}</a></li>
-                  <li><a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="text-white/75 hover:text-white">WhatsApp</a></li>
+                  <li><a href={CAL_URL} target="_blank" rel="noopener noreferrer" className="text-[#15151a]/75 hover:text-[#15151a]">Réserver un appel</a></li>
+                  <li><a href={`mailto:${MAIL}`} className="text-[#15151a]/75 hover:text-[#15151a]">{MAIL}</a></li>
+                  <li><a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="text-[#15151a]/75 hover:text-[#15151a]">WhatsApp</a></li>
                 </ul>
               </div>
             </div>
           </div>
-          <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 sm:flex-row">
-            <div className="text-xs text-white/50">
+          <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-[#15151a]/10 pt-6 sm:flex-row">
+            <div className="text-xs text-[#15151a]/50">
               © {new Date().getFullYear()} Zenoni Agency. Tous droits réservés.
             </div>
-            <div className="text-xs text-white/50">Conçu avec passion en Suisse 🇨🇭</div>
+            <div className="text-xs text-[#15151a]/50">Conçu avec passion en Suisse 🇨🇭</div>
           </div>
         </div>
       </div>
@@ -857,23 +870,21 @@ function Footer() {
 }
 
 function Index() {
+  useReveal();
   return (
     <div className="relative min-h-screen overflow-hidden bg-background">
-      <Orbs />
-      <div className="relative z-10">
-        <Header />
-        <main>
-          <Hero />
-          <Problem />
-          <Services />
-          <Process />
-          <Portfolio />
-          <Testimonials />
-          <FAQ />
-          <FinalCTA />
-        </main>
-        <Footer />
-      </div>
+      <Intro />
+      <Header />
+      <main>
+        <Hero />
+        <Marquee />
+        <Problem />
+        <Services />
+        <Process />
+        <FAQ />
+        <FinalCTA />
+      </main>
+      <Footer />
     </div>
   );
 }
