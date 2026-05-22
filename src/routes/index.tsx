@@ -25,7 +25,7 @@ import {
   Lock,
   Globe,
 } from "lucide-react";
-import logo from "@/assets/zenoni-logo.svg";
+import logo from "@/assets/zenoni-logo.png";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -117,13 +117,13 @@ function CTA({
   icon?: React.ComponentType<{ className?: string }>;
 }) {
   const base =
-    "group inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#d54545]/40";
+    "group inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#d54545]/40";
   const styles =
     variant === "primary"
-      ? "bg-[#d54545] text-white shadow-[0_10px_30px_-10px_rgba(213,69,69,0.6)] hover:shadow-[0_18px_40px_-10px_rgba(213,69,69,0.7)] hover:-translate-y-0.5"
+      ? "cta-primary"
       : variant === "dark"
-      ? "bg-[#15151a] text-white hover:bg-[#222228] hover:-translate-y-0.5"
-      : "bg-transparent text-[#15151a] border border-[#15151a]/15 hover:border-[#15151a]/35 hover:bg-[#15151a]/[0.04]";
+      ? "cta-dark"
+      : "bg-transparent text-[#15151a] border border-[#15151a]/15 transition-all duration-300 hover:border-[#15151a]/35 hover:bg-[#15151a]/[0.04] hover:-translate-y-0.5";
   return (
     <a
       href={href}
@@ -131,9 +131,9 @@ function CTA({
       rel="noopener noreferrer"
       className={`${base} ${styles} ${className}`}
     >
-      {Icon && <Icon className="h-4 w-4" />}
-      {children}
-      <ArrowRight className="h-4 w-4 -mr-1 opacity-0 -translate-x-1 transition-all group-hover:opacity-100 group-hover:translate-x-0" />
+      {Icon && <Icon className="relative z-10 h-4 w-4" />}
+      <span className="relative z-10">{children}</span>
+      <ArrowRight className="relative z-10 h-4 w-4 -mr-1 opacity-0 -translate-x-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0" />
     </a>
   );
 }
@@ -164,25 +164,21 @@ function Header() {
     { href: "#faq", label: "FAQ" },
   ];
   return (
-    <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled ? "nav-glass" : "bg-transparent"
-      }`}
-    >
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5">
+    <header className="fixed top-3 sm:top-4 inset-x-0 z-50 px-3 sm:px-5 transition-all duration-300">
+      <div
+        className={`mx-auto flex max-w-6xl items-center justify-between rounded-full pl-4 pr-2 sm:pl-5 sm:pr-2.5 py-2 transition-all duration-300 ${
+          scrolled ? "nav-glass-strong" : "nav-glass"
+        }`}
+      >
         <a href="#top" className="flex items-center gap-2">
-          <img src={logo} alt="Zenoni Agency" className="h-7 w-auto" />
+          <img src={logo} alt="Zenoni Agency" className="h-7 w-7 rounded-md" />
           <span className="text-base font-bold tracking-tight text-[#15151a]">
             Zenoni
           </span>
         </a>
-        <nav className="hidden items-center gap-8 lg:flex">
+        <nav className="hidden items-center gap-1 lg:flex">
           {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className="text-sm font-medium text-[#15151a]/70 transition-colors hover:text-[#15151a]"
-            >
+            <a key={l.href} href={l.href} className="nav-link">
               {l.label}
             </a>
           ))}
@@ -195,20 +191,20 @@ function Header() {
         <button
           aria-label="Menu"
           onClick={() => setOpen(!open)}
-          className="lg:hidden rounded-full border border-[#15151a]/15 p-2 text-[#15151a]"
+          className="lg:hidden rounded-full border border-[#15151a]/15 bg-white/40 p-2 text-[#15151a]"
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
       {open && (
-        <div className="mx-4 mt-1 rounded-2xl border border-[#15151a]/10 bg-white p-4 shadow-lg lg:hidden">
-          <nav className="flex flex-col gap-3">
+        <div className="mx-auto mt-2 max-w-6xl nav-glass-strong rounded-2xl p-4 lg:hidden">
+          <nav className="flex flex-col gap-1">
             {links.map((l) => (
               <a
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="text-sm text-[#15151a]/80"
+                className="nav-link justify-start"
               >
                 {l.label}
               </a>
@@ -252,7 +248,7 @@ function Hero() {
 
       <div className="relative mx-auto max-w-6xl px-5 text-center">
         <div className="animate-fade-up [animation-delay:200ms]">
-          <Eyebrow>Studio web · Suisse</Eyebrow>
+          <Eyebrow>Agence web · Suisse</Eyebrow>
         </div>
         <h1 className="mt-6 text-5xl font-bold leading-[1.02] tracking-tight text-[#15151a] sm:text-7xl lg:text-[5.5rem] animate-fade-up [animation-delay:350ms]">
           Des sites qui transforment
@@ -275,35 +271,86 @@ function Hero() {
           </CTA>
         </div>
 
-        {/* Hero mock (glass kept here only) */}
+        {/* Hero mock — styled, no float animation */}
         <div className="relative mx-auto mt-20 max-w-4xl animate-scale-in [animation-delay:800ms]">
-          <div className="hero-glass rounded-3xl p-3 sm:p-4 animate-float">
-            <div className="rounded-2xl bg-[#0e0e12] p-1.5 shadow-inner">
+          {/* Decorative floating cards behind */}
+          <div className="pointer-events-none absolute -left-6 -top-6 hidden sm:block rotate-[-6deg]">
+            <div className="surface rounded-2xl px-4 py-3 shadow-lg">
+              <div className="flex items-center gap-2">
+                <div className="h-7 w-7 rounded-full bg-[#d54545]/15 flex items-center justify-center">
+                  <Sparkles className="h-3.5 w-3.5 text-[#d54545]" />
+                </div>
+                <div className="text-left">
+                  <div className="text-[10px] uppercase tracking-wider text-[#15151a]/50">Conversion</div>
+                  <div className="text-sm font-bold text-[#15151a]">+128%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="pointer-events-none absolute -right-4 -bottom-6 hidden sm:block rotate-[5deg]">
+            <div className="surface rounded-2xl px-4 py-3 shadow-lg">
+              <div className="flex items-center gap-2">
+                <div className="h-7 w-7 rounded-full bg-[#15151a] flex items-center justify-center">
+                  <Rocket className="h-3.5 w-3.5 text-white" />
+                </div>
+                <div className="text-left">
+                  <div className="text-[10px] uppercase tracking-wider text-[#15151a]/50">Performance</div>
+                  <div className="text-sm font-bold text-[#15151a]">98/100</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="hero-frame rounded-3xl p-3 sm:p-4">
+            <div className="rounded-2xl bg-gradient-to-br from-[#15151a] via-[#1a1a22] to-[#0e0e12] p-1.5 shadow-inner overflow-hidden">
               <div className="flex items-center gap-1.5 px-3 py-2">
                 <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f56]" />
                 <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]" />
                 <span className="h-2.5 w-2.5 rounded-full bg-[#27c93f]" />
-                <span className="ml-3 text-[10px] text-white/50">votre-site.com</span>
+                <div className="ml-3 inline-flex items-center gap-1.5 rounded-md bg-white/10 px-2 py-0.5 text-[10px] text-white/70">
+                  <Lock className="h-2.5 w-2.5" />
+                  votre-site.com
+                </div>
               </div>
-              <div className="grid gap-4 rounded-xl bg-gradient-to-br from-white/[0.06] to-transparent p-6 sm:grid-cols-3 sm:p-10">
-                <div className="sm:col-span-2 text-left">
-                  <div className="h-3 w-24 rounded-full bg-white/15" />
-                  <div className="mt-4 h-8 w-full rounded-md bg-white/25" />
-                  <div className="mt-2 h-8 w-4/5 rounded-md bg-white/15" />
-                  <div className="mt-5 h-3 w-3/4 rounded-full bg-white/10" />
-                  <div className="mt-2 h-3 w-2/3 rounded-full bg-white/10" />
+              <div className="relative grid gap-4 rounded-xl p-6 sm:grid-cols-3 sm:p-10">
+                {/* subtle dot pattern inside */}
+                <div
+                  className="pointer-events-none absolute inset-0 opacity-30"
+                  style={{
+                    backgroundImage:
+                      "radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px)",
+                    backgroundSize: "18px 18px",
+                  }}
+                />
+                <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-[#d54545]/30 blur-3xl" />
+                <div className="relative sm:col-span-2 text-left">
+                  <div className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[10px] text-white/70">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#d54545]" />
+                    Landing premium
+                  </div>
+                  <div className="mt-4 h-8 w-full rounded-md bg-gradient-to-r from-white/40 to-white/10" />
+                  <div className="mt-2 h-8 w-4/5 rounded-md bg-gradient-to-r from-white/25 to-white/5" />
+                  <div className="mt-5 h-3 w-3/4 rounded-full bg-white/12" />
+                  <div className="mt-2 h-3 w-2/3 rounded-full bg-white/12" />
                   <div className="mt-6 flex gap-2">
-                    <div className="h-9 w-32 rounded-full bg-[#d54545]" />
-                    <div className="h-9 w-28 rounded-full bg-white/10" />
+                    <div className="h-9 w-32 rounded-full bg-[#d54545] shadow-[0_10px_24px_-8px_rgba(213,69,69,0.7)]" />
+                    <div className="h-9 w-28 rounded-full border border-white/20 bg-white/5" />
                   </div>
                 </div>
-                <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                  <div className="h-2 w-12 rounded-full bg-white/30" />
-                  <div className="mt-3 h-6 w-16 rounded bg-white/80" />
-                  <div className="mt-2 h-2 w-20 rounded-full bg-white/20" />
-                  <div className="mt-4 grid grid-cols-3 gap-1.5">
-                    {[...Array(6)].map((_, i) => (
-                      <div key={i} className="h-6 rounded bg-white/10" />
+                <div className="relative rounded-xl border border-white/10 bg-white/5 p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="text-[10px] uppercase tracking-wider text-white/50">Conversion</div>
+                    <TrendingDown className="h-3 w-3 rotate-180 text-[#d54545]" />
+                  </div>
+                  <div className="mt-2 text-2xl font-bold text-white">12.4%</div>
+                  <div className="mt-1 text-[10px] text-emerald-400">+4.2% ce mois</div>
+                  <div className="mt-4 flex items-end gap-1 h-12">
+                    {[40, 55, 45, 70, 60, 85, 95].map((h, i) => (
+                      <div
+                        key={i}
+                        className="flex-1 rounded-sm bg-gradient-to-t from-[#d54545]/30 to-[#d54545]"
+                        style={{ height: `${h}%` }}
+                      />
                     ))}
                   </div>
                 </div>
@@ -336,23 +383,29 @@ function Hero() {
 
 /* ============== Marquee ============== */
 function Marquee() {
-  const words = [
-    "Landing pages",
-    "Conversion-first",
-    "Design sobre",
-    "Performance",
-    "SEO",
-    "Sur-mesure",
-    "Suisse",
+  const items = [
+    { label: "Landing pages", style: "" },
+    { label: "Conversion-first", style: "dark" },
+    { label: "Design sobre", style: "" },
+    { label: "Performance", style: "red" },
+    { label: "SEO inclus", style: "" },
+    { label: "Sur-mesure", style: "dark" },
+    { label: "Made in Suisse 🇨🇭", style: "" },
+    { label: "2–4 semaines", style: "red" },
   ];
-  const row = [...words, ...words];
+  const row = [...items, ...items];
   return (
-    <section className="relative border-y border-[#15151a]/8 bg-white/50 py-6 overflow-hidden">
-      <div className="flex animate-marquee whitespace-nowrap gap-12">
+    <section className="relative border-y border-[#15151a]/8 bg-white/50 py-8 overflow-hidden">
+      <div className="absolute inset-0 bg-diag opacity-50" />
+      <div className="relative marquee-track flex animate-marquee whitespace-nowrap gap-3">
         {row.map((w, i) => (
-          <div key={i} className="flex items-center gap-12 text-xl font-semibold text-[#15151a]/40">
-            <span>{w}</span>
-            <span className="text-[#d54545]">✦</span>
+          <div
+            key={i}
+            className={`marquee-pill ${w.style}`}
+            style={{ transform: `rotate(${(i % 3) - 1}deg)` }}
+          >
+            {w.label}
+            <Sparkles className="h-3.5 w-3.5 opacity-70" />
           </div>
         ))}
       </div>
@@ -386,7 +439,15 @@ function Problem() {
   ];
   return (
     <section id="probleme" className="relative py-24 sm:py-32">
-      <div className="absolute inset-x-0 top-0 h-64 bg-dots opacity-60 mask-fade-b" />
+      <div className="absolute inset-0 bg-grid-fine opacity-60 mask-fade" />
+      <div
+        className="accent-blur"
+        style={{ top: 40, left: -120, width: 360, height: 360, background: "radial-gradient(circle, rgba(213,69,69,0.14), transparent 70%)" }}
+      />
+      <div
+        className="accent-blur"
+        style={{ bottom: 40, right: -120, width: 380, height: 380, background: "radial-gradient(circle, rgba(120,140,200,0.16), transparent 70%)" }}
+      />
       <div className="relative mx-auto max-w-6xl px-5">
         <div className="mx-auto max-w-3xl text-center reveal">
           <Eyebrow>Le constat</Eyebrow>
@@ -460,7 +521,15 @@ function Services() {
   ];
   return (
     <section id="services" className="relative py-24 sm:py-32 bg-white/60">
-      <div className="absolute inset-0 bg-grid-fine opacity-50 mask-fade" />
+      <div className="absolute inset-0 bg-grid opacity-60 mask-fade" />
+      <div
+        className="accent-blur"
+        style={{ top: -80, right: -100, width: 420, height: 420, background: "radial-gradient(circle, rgba(213,69,69,0.18), transparent 70%)" }}
+      />
+      <div
+        className="accent-blur"
+        style={{ bottom: -100, left: -120, width: 460, height: 460, background: "radial-gradient(circle, rgba(120,140,200,0.16), transparent 70%)" }}
+      />
       <div className="relative mx-auto max-w-6xl px-5">
         <div className="mx-auto max-w-3xl text-center reveal">
           <Eyebrow>Nos offres</Eyebrow>
@@ -618,7 +687,8 @@ function Process() {
   ];
   return (
     <section id="process" className="relative py-24 sm:py-32">
-      <div className="mx-auto max-w-6xl px-5">
+      <div className="absolute inset-0 bg-dots opacity-40 mask-fade" />
+      <div className="relative mx-auto max-w-6xl px-5">
         <div className="mx-auto max-w-3xl text-center reveal">
           <Eyebrow>Le process</Eyebrow>
           <h2 className="mt-5 text-3xl font-bold tracking-tight text-[#15151a] sm:text-5xl">
@@ -641,18 +711,28 @@ function Process() {
               className="reveal relative"
               style={{ transitionDelay: `${i * 100}ms` }}
             >
-              <div className="surface group relative rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
-                <div className="flex items-center justify-between">
-                  <span className="text-5xl font-bold text-[#15151a]/10">0{i + 1}</span>
+              <div className="surface group relative overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+                <div
+                  className="pointer-events-none absolute -top-2 -right-2 select-none text-7xl font-black leading-none text-transparent"
+                  style={{
+                    WebkitTextStroke: "1.5px rgba(213,69,69,0.35)",
+                  }}
+                >
+                  0{i + 1}
+                </div>
+                <div className="relative flex items-center justify-between">
+                  <span className="inline-flex h-10 min-w-10 items-center justify-center rounded-full bg-[#d54545] px-3 text-sm font-bold text-white shadow-[0_8px_20px_-6px_rgba(213,69,69,0.6)]">
+                    Étape 0{i + 1}
+                  </span>
                   <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[#15151a] text-white transition-colors group-hover:bg-[#d54545]">
                     <s.icon className="h-5 w-5" />
                   </div>
                 </div>
-                <h3 className="mt-3 text-lg font-semibold text-[#15151a]">{s.title}</h3>
-                <div className="mt-1 text-xs font-semibold uppercase tracking-wider text-[#d54545]">
+                <h3 className="relative mt-4 text-lg font-semibold text-[#15151a]">{s.title}</h3>
+                <div className="relative mt-1 text-xs font-semibold uppercase tracking-wider text-[#d54545]">
                   {s.d}
                 </div>
-                <p className="mt-3 text-sm leading-relaxed text-[#15151a]/65">{s.desc}</p>
+                <p className="relative mt-3 text-sm leading-relaxed text-[#15151a]/65">{s.desc}</p>
               </div>
             </div>
           ))}
@@ -693,7 +773,12 @@ function FAQ() {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
   return (
     <section id="faq" className="relative py-24 sm:py-32">
-      <div className="mx-auto max-w-3xl px-5">
+      <div className="absolute inset-0 bg-grid-fine opacity-50 mask-fade" />
+      <div
+        className="accent-blur"
+        style={{ top: 100, right: -100, width: 360, height: 360, background: "radial-gradient(circle, rgba(213,69,69,0.12), transparent 70%)" }}
+      />
+      <div className="relative mx-auto max-w-3xl px-5">
         <div className="text-center reveal">
           <Eyebrow>FAQ</Eyebrow>
           <h2 className="mt-5 text-3xl font-bold tracking-tight text-[#15151a] sm:text-5xl">
@@ -824,7 +909,7 @@ function Footer() {
           <div className="flex flex-col items-start justify-between gap-8 sm:flex-row">
             <div className="max-w-sm">
               <div className="flex items-center gap-2">
-                <img src={logo} alt="Zenoni Agency" className="h-8 w-auto" />
+                <img src={logo} alt="Zenoni Agency" className="h-8 w-8 rounded-md" />
                 <span className="text-base font-bold tracking-tight text-[#15151a]">
                   Zenoni
                 </span>
@@ -861,7 +946,7 @@ function Footer() {
             <div className="text-xs text-[#15151a]/50">
               © {new Date().getFullYear()} Zenoni Agency. Tous droits réservés.
             </div>
-            <div className="text-xs text-[#15151a]/50">Conçu avec passion en Suisse 🇨🇭</div>
+            <div className="text-xs text-[#15151a]/50">🇨🇭</div>
           </div>
         </div>
       </div>
