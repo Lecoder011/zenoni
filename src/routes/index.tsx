@@ -773,7 +773,12 @@ function FAQ() {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
   return (
     <section id="faq" className="relative py-24 sm:py-32">
-      <div className="mx-auto max-w-3xl px-5">
+      <div className="absolute inset-0 bg-grid-fine opacity-50 mask-fade" />
+      <div
+        className="accent-blur"
+        style={{ top: 100, right: -100, width: 360, height: 360, background: "radial-gradient(circle, rgba(213,69,69,0.12), transparent 70%)" }}
+      />
+      <div className="relative mx-auto max-w-3xl px-5">
         <div className="text-center reveal">
           <Eyebrow>FAQ</Eyebrow>
           <h2 className="mt-5 text-3xl font-bold tracking-tight text-[#15151a] sm:text-5xl">
