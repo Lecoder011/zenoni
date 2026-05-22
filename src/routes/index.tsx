@@ -687,7 +687,8 @@ function Process() {
   ];
   return (
     <section id="process" className="relative py-24 sm:py-32">
-      <div className="mx-auto max-w-6xl px-5">
+      <div className="absolute inset-0 bg-dots opacity-40 mask-fade" />
+      <div className="relative mx-auto max-w-6xl px-5">
         <div className="mx-auto max-w-3xl text-center reveal">
           <Eyebrow>Le process</Eyebrow>
           <h2 className="mt-5 text-3xl font-bold tracking-tight text-[#15151a] sm:text-5xl">
