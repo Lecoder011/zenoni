@@ -521,7 +521,15 @@ function Services() {
   ];
   return (
     <section id="services" className="relative py-24 sm:py-32 bg-white/60">
-      <div className="absolute inset-0 bg-grid-fine opacity-50 mask-fade" />
+      <div className="absolute inset-0 bg-grid opacity-60 mask-fade" />
+      <div
+        className="accent-blur"
+        style={{ top: -80, right: -100, width: 420, height: 420, background: "radial-gradient(circle, rgba(213,69,69,0.18), transparent 70%)" }}
+      />
+      <div
+        className="accent-blur"
+        style={{ bottom: -100, left: -120, width: 460, height: 460, background: "radial-gradient(circle, rgba(120,140,200,0.16), transparent 70%)" }}
+      />
       <div className="relative mx-auto max-w-6xl px-5">
         <div className="mx-auto max-w-3xl text-center reveal">
           <Eyebrow>Nos offres</Eyebrow>
