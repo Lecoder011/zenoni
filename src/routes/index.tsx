@@ -439,7 +439,15 @@ function Problem() {
   ];
   return (
     <section id="probleme" className="relative py-24 sm:py-32">
-      <div className="absolute inset-x-0 top-0 h-64 bg-dots opacity-60 mask-fade-b" />
+      <div className="absolute inset-0 bg-grid-fine opacity-60 mask-fade" />
+      <div
+        className="accent-blur"
+        style={{ top: 40, left: -120, width: 360, height: 360, background: "radial-gradient(circle, rgba(213,69,69,0.14), transparent 70%)" }}
+      />
+      <div
+        className="accent-blur"
+        style={{ bottom: 40, right: -120, width: 380, height: 380, background: "radial-gradient(circle, rgba(120,140,200,0.16), transparent 70%)" }}
+      />
       <div className="relative mx-auto max-w-6xl px-5">
         <div className="mx-auto max-w-3xl text-center reveal">
           <Eyebrow>Le constat</Eyebrow>
