@@ -383,23 +383,29 @@ function Hero() {
 
 /* ============== Marquee ============== */
 function Marquee() {
-  const words = [
-    "Landing pages",
-    "Conversion-first",
-    "Design sobre",
-    "Performance",
-    "SEO",
-    "Sur-mesure",
-    "Suisse",
+  const items = [
+    { label: "Landing pages", style: "" },
+    { label: "Conversion-first", style: "dark" },
+    { label: "Design sobre", style: "" },
+    { label: "Performance", style: "red" },
+    { label: "SEO inclus", style: "" },
+    { label: "Sur-mesure", style: "dark" },
+    { label: "Made in Suisse 🇨🇭", style: "" },
+    { label: "2–4 semaines", style: "red" },
   ];
-  const row = [...words, ...words];
+  const row = [...items, ...items];
   return (
-    <section className="relative border-y border-[#15151a]/8 bg-white/50 py-6 overflow-hidden">
-      <div className="flex animate-marquee whitespace-nowrap gap-12">
+    <section className="relative border-y border-[#15151a]/8 bg-white/50 py-8 overflow-hidden">
+      <div className="absolute inset-0 bg-diag opacity-50" />
+      <div className="relative marquee-track flex animate-marquee whitespace-nowrap gap-3">
         {row.map((w, i) => (
-          <div key={i} className="flex items-center gap-12 text-xl font-semibold text-[#15151a]/40">
-            <span>{w}</span>
-            <span className="text-[#d54545]">✦</span>
+          <div
+            key={i}
+            className={`marquee-pill ${w.style}`}
+            style={{ transform: `rotate(${(i % 3) - 1}deg)` }}
+          >
+            {w.label}
+            <Sparkles className="h-3.5 w-3.5 opacity-70" />
           </div>
         ))}
       </div>
