@@ -946,7 +946,7 @@ function Footer() {
             <div className="text-xs text-[#15151a]/50">
               © {new Date().getFullYear()} Zenoni Agency. Tous droits réservés.
             </div>
-            <div className="text-xs text-[#15151a]/50">Conçu avec passion en Suisse 🇨🇭</div>
+            <div className="text-xs text-[#15151a]/50">🇨🇭</div>
           </div>
         </div>
       </div>
