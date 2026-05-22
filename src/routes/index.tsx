@@ -711,18 +711,28 @@ function Process() {
               className="reveal relative"
               style={{ transitionDelay: `${i * 100}ms` }}
             >
-              <div className="surface group relative rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
-                <div className="flex items-center justify-between">
-                  <span className="text-5xl font-bold text-[#15151a]/10">0{i + 1}</span>
+              <div className="surface group relative overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+                <div
+                  className="pointer-events-none absolute -top-2 -right-2 select-none text-7xl font-black leading-none text-transparent"
+                  style={{
+                    WebkitTextStroke: "1.5px rgba(213,69,69,0.35)",
+                  }}
+                >
+                  0{i + 1}
+                </div>
+                <div className="relative flex items-center justify-between">
+                  <span className="inline-flex h-10 min-w-10 items-center justify-center rounded-full bg-[#d54545] px-3 text-sm font-bold text-white shadow-[0_8px_20px_-6px_rgba(213,69,69,0.6)]">
+                    Étape 0{i + 1}
+                  </span>
                   <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[#15151a] text-white transition-colors group-hover:bg-[#d54545]">
                     <s.icon className="h-5 w-5" />
                   </div>
                 </div>
-                <h3 className="mt-3 text-lg font-semibold text-[#15151a]">{s.title}</h3>
-                <div className="mt-1 text-xs font-semibold uppercase tracking-wider text-[#d54545]">
+                <h3 className="relative mt-4 text-lg font-semibold text-[#15151a]">{s.title}</h3>
+                <div className="relative mt-1 text-xs font-semibold uppercase tracking-wider text-[#d54545]">
                   {s.d}
                 </div>
-                <p className="mt-3 text-sm leading-relaxed text-[#15151a]/65">{s.desc}</p>
+                <p className="relative mt-3 text-sm leading-relaxed text-[#15151a]/65">{s.desc}</p>
               </div>
             </div>
           ))}
