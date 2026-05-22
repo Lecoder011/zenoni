@@ -82,8 +82,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "Zenoni Agency" },
       { name: "twitter:description", content: "Création de landing page qui transforment vos visiteurs en clients." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/974db6c7-8951-4b64-b7a9-ad8d9d277e80/id-preview-787d384d--5cbb0020-a855-495a-a198-ffd2eb09b3b9.lovable.app-1779422999960.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/974db6c7-8951-4b64-b7a9-ad8d9d277e80/id-preview-787d384d--5cbb0020-a855-495a-a198-ffd2eb09b3b9.lovable.app-1779422999960.png" },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c15eea2a-8de1-4972-bb22-e84a35d0e8da/id-preview-07aa38c1--5cbb0020-a855-495a-a198-ffd2eb09b3b9.lovable.app-1779424546919.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c15eea2a-8de1-4972-bb22-e84a35d0e8da/id-preview-07aa38c1--5cbb0020-a855-495a-a198-ffd2eb09b3b9.lovable.app-1779424546919.png" },
     ],
     links: [
       {
