@@ -171,7 +171,7 @@ function Header() {
         }`}
       >
         <a href="#top" className="flex items-center gap-2">
-          <img src={logo} alt="Zenoni Agency" className="h-7 w-7 rounded-md" />
+          <img src={logo} alt="Zenoni Agency" className="h-9 w-9 rounded-[10px] object-cover" />
           <span className="text-base font-bold tracking-tight text-[#15151a]">
             Zenoni
           </span>
