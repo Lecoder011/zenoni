@@ -905,7 +905,7 @@ function Footer() {
           <div className="flex flex-col items-start justify-between gap-8 sm:flex-row">
             <div className="max-w-sm">
               <div className="flex items-center gap-2">
-                <img src={logo} alt="Zenoni Agency" className="h-8 w-8 rounded-md" />
+                <img src={logo} alt="Zenoni Agency" className="h-10 w-10 rounded-[10px] object-cover" />
                 <span className="text-base font-bold tracking-tight text-[#15151a]">
                   Zenoni
                 </span>
