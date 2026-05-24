@@ -397,13 +397,15 @@ function Marquee() {
   return (
     <section className="relative border-y border-[#15151a]/8 bg-white/50 py-8 overflow-hidden">
       <div className="absolute inset-0 bg-diag opacity-50" />
-      <div className="relative marquee-track flex animate-marquee whitespace-nowrap gap-3 will-change-transform">
-        {row.map((w, i) => (
-          <div key={i} className={`marquee-pill ${w.style}`}>
-            {w.label}
-            <Sparkles className="h-3.5 w-3.5 opacity-70" />
-          </div>
-        ))}
+      <div className="relative marquee-track whitespace-nowrap">
+        <div className="marquee-strip animate-marquee will-change-transform">
+          {row.map((w, i) => (
+            <div key={i} className={`marquee-pill ${w.style}`}>
+              {w.label}
+              <Sparkles className="h-3.5 w-3.5 opacity-70" />
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
