@@ -171,7 +171,7 @@ function Header() {
         }`}
       >
         <a href="#top" className="flex items-center gap-2">
-          <img src={logo} alt="Zenoni Agency" className="h-7 w-7 rounded-md" />
+          <img src={logo} alt="Zenoni Agency" className="h-9 w-9 rounded-[10px] object-cover" />
           <span className="text-base font-bold tracking-tight text-[#15151a]">
             Zenoni
           </span>
@@ -397,13 +397,9 @@ function Marquee() {
   return (
     <section className="relative border-y border-[#15151a]/8 bg-white/50 py-8 overflow-hidden">
       <div className="absolute inset-0 bg-diag opacity-50" />
-      <div className="relative marquee-track flex animate-marquee whitespace-nowrap gap-3">
+      <div className="relative marquee-track flex animate-marquee whitespace-nowrap gap-3 will-change-transform">
         {row.map((w, i) => (
-          <div
-            key={i}
-            className={`marquee-pill ${w.style}`}
-            style={{ transform: `rotate(${(i % 3) - 1}deg)` }}
-          >
+          <div key={i} className={`marquee-pill ${w.style}`}>
             {w.label}
             <Sparkles className="h-3.5 w-3.5 opacity-70" />
           </div>
@@ -909,7 +905,7 @@ function Footer() {
           <div className="flex flex-col items-start justify-between gap-8 sm:flex-row">
             <div className="max-w-sm">
               <div className="flex items-center gap-2">
-                <img src={logo} alt="Zenoni Agency" className="h-8 w-8 rounded-md" />
+                <img src={logo} alt="Zenoni Agency" className="h-10 w-10 rounded-[10px] object-cover" />
                 <span className="text-base font-bold tracking-tight text-[#15151a]">
                   Zenoni
                 </span>
