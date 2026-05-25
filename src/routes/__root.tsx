@@ -72,16 +72,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Zenoni Agency" },
-      { name: "description", content: "Création de landing page qui transforment vos visiteurs en clients." },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Zenoni Agency" },
-      { property: "og:description", content: "Création de landing page qui transforment vos visiteurs en clients." },
+      { title: "Création de Landing Page Vaud & Suisse Romande | Zenoni Agency" },
+      { name: "description", content: "Zenoni Agency conçoit des landing pages premium orientées conversion pour TPE/PME et startups dans le canton de Vaud et toute la Suisse romande. Design sobre, performance maximale. Livraison en 2 à 4 semaines." },
+      { name: "keywords", content: "création landing page Vaud, agence web Lausanne, landing page conversion Suisse romande, création site internet PME Vaud, agence web Vaud, site internet professionnel Suisse" },
+      { name: "geo.region", content: "CH-VD" },
+      { name: "geo.placename", content: "Vaud, Suisse" },
+      { name: "author", content: "Zenoni Agency" },
+      { property: "og:title", content: "Zenoni Agency — Landing Pages Premium | Vaud, Suisse Romande" },
+      { property: "og:description", content: "Des landing pages sur-mesure qui transforment vos visiteurs en clients. Agence web basée dans le canton de Vaud, au service des entreprises de Suisse romande." },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://zenoni.agency" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Zenoni Agency" },
-      { name: "twitter:description", content: "Création de landing page qui transforment vos visiteurs en clients." },
+      { name: "twitter:site", content: "@ZenoniAgency" },
+      { name: "twitter:title", content: "Zenoni Agency — Landing Pages Premium | Vaud" },
+      { name: "twitter:description", content: "Landing pages premium pour PME et startups en Suisse romande. Conversion-first, livraison 2-4 semaines." },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c15eea2a-8de1-4972-bb22-e84a35d0e8da/id-preview-07aa38c1--5cbb0020-a855-495a-a198-ffd2eb09b3b9.lovable.app-1779424546919.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c15eea2a-8de1-4972-bb22-e84a35d0e8da/id-preview-07aa38c1--5cbb0020-a855-495a-a198-ffd2eb09b3b9.lovable.app-1779424546919.png" },
     ],
@@ -94,6 +98,29 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon-32x32.png" },
       { rel: "icon", type: "image/png", sizes: "16x16", href: "/favicon-16x16.png" },
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+      { rel: "canonical", href: "https://zenoni.agency" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          "name": "Zenoni Agency",
+          "description": "Agence de création de landing pages premium pour PME et startups en Suisse romande, canton de Vaud.",
+          "url": "https://zenoni.agency",
+          "email": "admin@zenoni.agency",
+          "telephone": "+41792272134",
+          "address": {
+            "@type": "PostalAddress",
+            "addressRegion": "Vaud",
+            "addressCountry": "CH"
+          },
+          "areaServed": ["Vaud", "Lausanne", "Genève", "Fribourg", "Suisse romande"],
+          "serviceType": ["Création de landing page", "Agence web", "Développement site internet"],
+          "priceRange": "CHF 1500 - CHF 6000"
+        }),
+      },
     ],
   }),
   shellComponent: RootShell,
@@ -104,7 +131,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <head>
         <HeadContent />
       </head>
