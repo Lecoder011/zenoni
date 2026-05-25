@@ -31,17 +31,17 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "Zenoni Agency — Landing pages qui convertissent en 2-4 semaines" },
+      { title: "Création de Landing Page Vaud & Suisse Romande | Zenoni Agency" },
       {
         name: "description",
         content:
-          "Zenoni Agency conçoit des landing pages premium orientées conversion pour TPE/PME, startups et SaaS. Livraison en 2 à 4 semaines. Réservez votre appel découverte.",
+          "Zenoni Agency conçoit des landing pages premium orientées conversion pour TPE/PME et startups dans le canton de Vaud et toute la Suisse romande. Design sobre, performance maximale. Livraison en 2 à 4 semaines.",
       },
-      { property: "og:title", content: "Zenoni Agency — Landing pages qui convertissent" },
+      { property: "og:title", content: "Zenoni Agency — Landing Pages Premium | Vaud, Suisse Romande" },
       {
         property: "og:description",
         content:
-          "Des sites one-page premium qui transforment vos visiteurs en clients.",
+          "Des landing pages sur-mesure qui transforment vos visiteurs en clients. Agence web basée dans le canton de Vaud, au service des entreprises de Suisse romande.",
       },
     ],
   }),
@@ -171,7 +171,7 @@ function Header() {
         }`}
       >
         <a href="#top" className="flex items-center gap-2">
-          <img src={logo} alt="Zenoni Agency" className="h-9 w-9 rounded-[10px] object-cover" />
+          <img src={logo} alt="Zenoni Agency — Agence création landing page Vaud Suisse romande" className="h-9 w-9 rounded-[10px] object-cover" />
           <span className="text-base font-bold tracking-tight text-[#15151a]">
             Zenoni
           </span>
@@ -248,19 +248,13 @@ function Hero() {
 
       <div className="relative mx-auto max-w-6xl px-5 text-center">
         <div className="animate-fade-up [animation-delay:200ms]">
-          <Eyebrow>Agence web · Suisse</Eyebrow>
+          <Eyebrow>Agence web · Canton de Vaud, Suisse</Eyebrow>
         </div>
         <h1 className="mt-6 text-5xl font-bold leading-[1.02] tracking-tight text-[#15151a] sm:text-7xl lg:text-[5.5rem] animate-fade-up [animation-delay:350ms]">
-          Des sites qui transforment
-          <br />
-          vos visiteurs en{" "}
-          <span className="relative inline-block">
-            <span className="shimmer-text">clients.</span>
-          </span>
+          Des landing pages qui transforment vos visiteurs en clients — dans le canton de Vaud et toute la Suisse romande.
         </h1>
         <p className="mx-auto mt-7 max-w-2xl text-base text-[#15151a]/65 sm:text-lg animate-fade-up [animation-delay:500ms]">
-          Zenoni Agency conçoit des landing pages premium pour TPE/PME, startups et SaaS.
-          Design sobre, message clair, performance — pensés pour convertir.
+          Zenoni Agency conçoit des landing pages premium pour TPE/PME, startups et SaaS basés en Suisse romande. Design sobre, message clair, performance — pensés pour convertir.
         </p>
         <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row animate-fade-up [animation-delay:650ms]">
           <CTA href={CAL_URL} icon={Calendar}>
@@ -456,7 +450,7 @@ function Problem() {
           </h2>
           <p className="mt-5 text-[#15151a]/65">
             En 2026, votre site est votre premier commercial. S'il est absent, lent ou
-            mal-foutu, c'est votre chiffre d'affaires qui en paie le prix.
+            mal-foutu, c'est votre chiffre d'affaires qui en paie le prix. En Suisse romande, les entreprises du canton de Vaud perdent chaque jour des clients faute d'un site professionnel et performant.
           </p>
         </div>
 
@@ -907,14 +901,13 @@ function Footer() {
           <div className="flex flex-col items-start justify-between gap-8 sm:flex-row">
             <div className="max-w-sm">
               <div className="flex items-center gap-2">
-                <img src={logo} alt="Zenoni Agency" className="h-10 w-10 rounded-[10px] object-cover" />
+                <img src={logo} alt="Zenoni Agency — Agence création landing page Vaud Suisse romande" className="h-10 w-10 rounded-[10px] object-cover" />
                 <span className="text-base font-bold tracking-tight text-[#15151a]">
                   Zenoni
                 </span>
               </div>
               <p className="mt-4 text-sm leading-relaxed text-[#15151a]/60">
-                Landing pages premium pour entreprises ambitieuses. Design, conversion,
-                résultats.
+                Landing pages premium pour entreprises ambitieuses en Suisse romande. Vaud · Lausanne · Genève · Fribourg.
               </p>
             </div>
             <div className="grid grid-cols-2 gap-10 text-sm sm:gap-16">
